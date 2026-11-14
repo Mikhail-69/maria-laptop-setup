@@ -1,0 +1,31 @@
+name: packages
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 4 * * 1"
+
+jobs:
+  ubuntu-2404:
+    runs-on: ubuntu-latest
+    container: ubuntu:24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: prerequisites
+        run: |
+          apt-get update -qq
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            ca-certificates curl git jq
+
+      - name: apt package names exist in 24.04
+        run: bash tests/check-packages.sh
+
+      - name: snap names exist in the store
+        run: bash tests/check-snaps.sh
+
+      - name: external urls resolve
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash tests/check-urls.sh

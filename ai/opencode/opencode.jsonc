@@ -1,0 +1,648 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // === ОБЩЕЕ ПОВЕДЕНИЕ ===
+  "update": "disable",
+  "share": "disabled",
+  "snapshots": true,
+
+  // === СЖАТИЕ КОНТЕКСТА ===
+  "compaction": {
+    "auto": true,
+    "keep": { "tokens": 15000 },
+    "buffer": 20000
+  },
+
+  // === РАЗРЕШЕНИЯ ===
+  "permissions": [
+    { "action": "shell", "resource": "*", "effect": "allow" },
+
+    { "action": "shell", "resource": "git status *", "effect": "allow" },
+    { "action": "shell", "resource": "git status", "effect": "allow" },
+    { "action": "shell", "resource": "git diff *", "effect": "allow" },
+    { "action": "shell", "resource": "git diff", "effect": "allow" },
+    { "action": "shell", "resource": "git log *", "effect": "allow" },
+    { "action": "shell", "resource": "git log", "effect": "allow" },
+    { "action": "shell", "resource": "git branch *", "effect": "allow" },
+    { "action": "shell", "resource": "git branch", "effect": "allow" },
+    { "action": "shell", "resource": "git show *", "effect": "allow" },
+    { "action": "shell", "resource": "ls *", "effect": "allow" },
+    { "action": "shell", "resource": "ls", "effect": "allow" },
+    { "action": "shell", "resource": "cat *", "effect": "allow" },
+    { "action": "shell", "resource": "pwd", "effect": "allow" },
+    { "action": "shell", "resource": "which *", "effect": "allow" },
+    { "action": "shell", "resource": "whoami", "effect": "allow" },
+    { "action": "shell", "resource": "env", "effect": "allow" },
+    { "action": "shell", "resource": "echo *", "effect": "allow" },
+
+    // === GITHUB: чтение без вопроса ===
+    { "action": "shell", "resource": "gh auth status", "effect": "allow" },
+    { "action": "shell", "resource": "gh pr list *", "effect": "allow" },
+    { "action": "shell", "resource": "gh pr view *", "effect": "allow" },
+    { "action": "shell", "resource": "gh pr diff *", "effect": "allow" },
+    { "action": "shell", "resource": "gh issue list *", "effect": "allow" },
+    { "action": "shell", "resource": "gh issue view *", "effect": "allow" },
+    { "action": "shell", "resource": "gh repo view *", "effect": "allow" },
+    { "action": "shell", "resource": "gh run list *", "effect": "allow" },
+    { "action": "shell", "resource": "gh run view *", "effect": "allow" },
+    { "action": "shell", "resource": "gh search *", "effect": "allow" },
+    { "action": "shell", "resource": "gh api *", "effect": "ask" },
+
+    // === GITHUB: запись — только с подтверждения ===
+    { "action": "shell", "resource": "gh pr create *", "effect": "ask" },
+    { "action": "shell", "resource": "gh pr merge *", "effect": "ask" },
+    { "action": "shell", "resource": "gh issue create *", "effect": "ask" },
+    { "action": "shell", "resource": "gh release create *", "effect": "ask" },
+
+    // === GITHUB: нельзя ===
+    { "action": "shell", "resource": "gh secret *", "effect": "deny" },
+    { "action": "shell", "resource": "gh ssh-key *", "effect": "deny" },
+    { "action": "shell", "resource": "gh gpg-key *", "effect": "deny" },
+    { "action": "shell", "resource": "gh repo delete *", "effect": "deny" },
+
+    // High-impact commands retain explicit approval.
+    {"action": "shell", "resource": "git commit*", "effect": "ask"},
+    {"action": "shell", "resource": "git reset*", "effect": "ask"},
+    {"action": "shell", "resource": "git clean*", "effect": "ask"},
+    {"action": "shell", "resource": "git rebase*", "effect": "ask"},
+    {"action": "shell", "resource": "git restore*", "effect": "ask"},
+    {"action": "shell", "resource": "git checkout*", "effect": "ask"},
+    {"action": "shell", "resource": "rm *", "effect": "ask"},
+    {"action": "shell", "resource": "rmdir *", "effect": "ask"},
+    { "action": "shell", "resource": "git push *", "effect": "ask" },
+    { "action": "shell", "resource": "git push", "effect": "ask" },
+    // `rm -rf /*` — это «rm -rf /» плюс любые символы, включая «/».
+    // Правило блокировало не только корень, но и rm -rf /tmp/... .
+    // Сузить его нельзя: паттерн, отличающий `/*` от `/tmp/x`, не пишется
+    // (экранирования нет), а без него `rm -rf /*` ушёл бы в ask, и стирание
+    // корня можно было бы подтвердить. Поэтому deny остаётся общим, а
+    // безопасные каталоги перечислены ниже: побеждает последнее совпадение.
+    { "action": "shell", "resource": "rm -rf /*", "effect": "deny" },
+    { "action": "shell", "resource": "rm -rf /tmp/*", "effect": "allow" },
+    { "action": "shell", "resource": "rm -rf /var/tmp/*", "effect": "allow" },
+    // Ресурсы shell не раскрывают ~, поэтому здесь буквальный текст команды.
+    { "action": "shell", "resource": "rm -rf ~/.cache/*", "effect": "allow" },
+    { "action": "shell", "resource": "sudo *", "effect": "deny" },
+    { "action": "shell", "resource": "sudo", "effect": "deny" },
+    { "action": "shell", "resource": "shutdown *", "effect": "deny" },
+    { "action": "shell", "resource": "reboot", "effect": "deny" },
+
+    { "action": "edit", "resource": "*", "effect": "allow" },
+    {"action": "edit", "resource": "*.env", "effect": "ask"},
+    {"action": "edit", "resource": "*.env.*", "effect": "ask"},
+    {"action": "edit", "resource": "*.env.example", "effect": "allow"},
+    {"action": "edit", "resource": "*.secrets*", "effect": "ask"},
+    {"action": "edit", "resource": "*/secrets/*", "effect": "ask"},
+    {"action": "edit", "resource": "*/.ssh/*", "effect": "ask"},
+    {"action": "edit", "resource": "*/.aws/*", "effect": "ask"},
+    {"action": "edit", "resource": "*/.config/gh/*", "effect": "ask"},
+    {"action": "edit", "resource": "*/auth.json", "effect": "ask"},
+    {"action": "edit", "resource": "*/auth.json.*", "effect": "ask"},
+
+    { "action": "read", "resource": "*", "effect": "allow" },
+    {"action": "read", "resource": "*.secrets*", "effect": "ask"},
+    {"action": "read", "resource": "*/.aws/*", "effect": "ask"},
+    {"action": "read", "resource": "*/.config/gh/*", "effect": "ask"},
+    {"action": "read", "resource": "*/auth.json", "effect": "ask"},
+    {"action": "read", "resource": "*/auth.json.*", "effect": "ask"},
+    { "action": "read", "resource": "*.env", "effect": "ask" },
+    { "action": "read", "resource": "*.env.*", "effect": "ask" },
+    { "action": "read", "resource": "*.env.example", "effect": "allow" },
+    { "action": "read", "resource": "*id_rsa*", "effect": "deny" },
+    { "action": "read", "resource": "*id_ed25519*", "effect": "deny" },
+    { "action": "read", "resource": "*.pem", "effect": "deny" },
+    { "action": "read", "resource": "*/.ssh/*", "effect": "deny" },
+    { "action": "read", "resource": "*/secrets/*", "effect": "deny" },
+
+    { "action": "external_directory", "resource": "*", "effect": "ask" },
+
+    { "action": "webfetch", "resource": "*", "effect": "allow" },
+    { "action": "websearch", "resource": "*", "effect": "allow" },
+
+    { "action": "subagent", "resource": "*", "effect": "allow" },
+    { "action": "skill", "resource": "*", "effect": "allow" }
+  ],
+
+  // === ВЕБ-ПОИСК ===
+  "websearch": {
+    "provider": "random"
+  },
+
+  // === GITHUB MCP ===
+  // Внимание: схема V2 — серверы под mcp.servers (не mcp.<name>).
+  // oauth:false обязателен: GitHub требует зарегистрированный OAuth App
+  // на стороне хоста и не поддерживает динамическую регистрацию клиента.
+  // Токен берётся из файла: подстановка {env:...} в фоновый сервис не доходит.
+  "mcp": {
+    // Сеть до GitHub медленная: пустой ответ уходит ~11с, бывают TLS-таймауты.
+    "timeout": { "startup": 90000 },
+    "servers": {
+      "github": {
+        "type": "remote",
+        "url": "https://api.githubcopilot.com/mcp/",
+        "oauth": false,
+        "headers": {
+          "Authorization": "Bearer {file:~/.config/opencode/secrets/github-pat}",
+          // Без этого сервер отдаёт ~90 инструментов и раздувает контекст.
+          "X-MCP-Toolsets": "context,repos,issues,pull_requests,actions"
+        }
+      }
+    }
+  },
+
+  // === ПРОВАЙДЕРЫ ===
+  "providers": {
+    // === OLLAMA НА MINIPC: через SSH-туннель на 127.0.0.1:11434 ===
+    // Встроенный провайдер сам находит модели. limit совпадает с
+    // OLLAMA_CONTEXT_LENGTH=16384 на сервере: модель умеет 262144, но сервер
+    // держит 16K, и клиент не должен отправлять больше.
+    "ollama": {
+      "models": {
+        "qwen3:4b-instruct": {
+          "limit": { "context": 16384, "output": 4096 }
+        }
+      }
+    },
+
+    // === OPENCODE ZEN: ТОЛЬКО БЕСПЛАТНЫЕ ===
+    // Каталогный провайдер, поэтому models только подписывает модели и не
+    // прячет лишние — платные отключаем явным disabled: true.
+    //
+    // Включены 12 моделей с нулевой ценой (каталог сам рисует им плашку
+    // «Free»): space-bunny-free, nemotron-3-ultra-free,
+    // nemotron-3.5-lightning-free, muse-spark-1.3-contributor-free,
+    // step-5-preview-free, exo-free, cat-jam-free,
+    // longcat-2.5-preview-free, mimo-v2.6-flash-free,
+    // ling-3.1-flash-free, ling-3.0-flash-fin-free, big-pickle.
+    //
+    // Отключены 31 платная — от $0.10/$0.50 до $30/$180 за миллион токенов.
+    // Включены 10 рабочих бесплатных (из 12 в каталоге ещё 2 нерабочие,
+    // они отключены ниже с пометкой).
+    "opencode": {
+      "models": {
+        "gemini-4-argon": { "disabled": true },
+        "claude-haiku-5-5": { "disabled": true },
+        "mistral-large-4": { "disabled": true },
+        "gpt-6.1-sol": { "disabled": true },
+        "claude-sonnet-5-5": { "disabled": true },
+        "claude-opus-5-5": { "disabled": true },
+        "gpt-6-luna": { "disabled": true },
+        "grok-4.7": { "disabled": true },
+        "deepseek-v4.1-flash": { "disabled": true },
+        "gpt-6-astra": { "disabled": true },
+        "muse-spark-1.3": { "disabled": true },
+        "gemini-3.8-flash": { "disabled": true },
+        "claude-fable-5-1": { "disabled": true },
+        "glm-5.3-flash": { "disabled": true },
+        "qwen3.8-flash": { "disabled": true },
+        "glm-5.3": { "disabled": true },
+        "gemini-3.5-flash-lite": { "disabled": true },
+        "kimi-k3": { "disabled": true },
+        "gpt-5.6-terra": { "disabled": true },
+        "kimi-k2.7-code": { "disabled": true },
+        "minimax-m3": { "disabled": true },
+        "gpt-5.5-pro": { "disabled": true },
+        "deepseek-v4-pro": { "disabled": true },
+        "gpt-5.5": { "disabled": true },
+        "grok-build-0.1": { "disabled": true },
+        "qwen3.6-plus": { "disabled": true },
+        "gpt-5.4-nano": { "disabled": true },
+        "gpt-5.4-mini": { "disabled": true },
+        "gpt-5.3-codex": { "disabled": true },
+        "gemini-3.1-pro": { "disabled": true },
+        "gpt-5.3-codex-spark": { "disabled": true },
+
+        // Бесплатные по каталогу, но нерабочие — проверено живыми запросами
+        // 2026-11-10:
+        // space-bunny-free            -> "Model unavailable" (был дефолтом!)
+        // exo-free                    -> "Model exo-free has been deprecated"
+        // ling-3.0-flash-fin-free     -> "Upstream request failed: Model is unavailable"
+        // ling-3.1-flash-free         -> "Model unavailable"
+        // muse-spark-1.3-contributor-free -> "Model unavailable"
+        // step-5-preview-free         -> "Model unavailable"
+        // cat-jam-free                -> "Model unavailable"
+        // longcat-2.5-preview-free    -> "Model unavailable"
+        // nemotron-3-ultra-free       -> "Model unavailable"
+        //
+        // Рабочие на эту дату: big-pickle, mimo-v2.6-flash-free,
+        // nemotron-3.5-lightning-free.
+        "space-bunny-free": { "disabled": true },
+        "exo-free": { "disabled": true },
+        "ling-3.0-flash-fin-free": { "disabled": true },
+        "ling-3.1-flash-free": { "disabled": true },
+        "muse-spark-1.3-contributor-free": { "disabled": true },
+        "step-5-preview-free": { "disabled": true },
+        "cat-jam-free": { "disabled": true },
+        "longcat-2.5-preview-free": { "disabled": true },
+        "nemotron-3-ultra-free": { "disabled": true },
+
+        // === Платные модели OpenCode — отключены ===
+        "gpt-6-sol": { "disabled": true },
+        "gemini-3.7-flash": { "disabled": true },
+        "grok-4.6": { "disabled": true },
+        "muse-spark-1.2": { "disabled": true },
+        "qwen3.8-max": { "disabled": true },
+        "claude-opus-5": { "disabled": true },
+        "gpt-5.6-luna": { "disabled": true },
+        "claude-sonnet-5": { "disabled": true },
+        "glm-5.2": { "disabled": true },
+        "claude-fable-5": { "disabled": true },
+        "kimi-k2.6": { "disabled": true },
+        "minimax-m2.7": { "disabled": true },
+        "gpt-5.4": { "disabled": true },
+        "gpt-5.4-pro": { "disabled": true },
+        "qwen3.5-plus": { "disabled": true },
+        "gpt-5.2-codex": { "disabled": true },
+        "claude-haiku-4-5": { "disabled": true },
+        "gpt-5-nano": { "disabled": true }
+      }
+    },
+
+    // === MISTRAL AI ===
+    // Ключ из консоли console.mistral.ai в файле, поэтому /connect для
+    // mistral НЕ используем: сохранённый аккаунт в БД имеет приоритет над
+    // settings.apiKey из конфига.
+    //
+    // ВНИМАНИЕ: доступность проверена живыми запросами, а не взята из
+    // консоли. Страница https://admin.mistral.ai/plateforme/limits вводит
+    // в заблуждение: она показывает лимиты для ВСЕХ моделей организации,
+    // в том числе недоступные твоему тиру. Например, у mistral-small-2603
+    // там написано 20 000 TPM и 1.00 RPS, а API отдаёт 429 с
+    // x-ratelimit-limit-req-minute: 0. У mistral-large-4 там тоже есть
+    // лимиты, но API отвечает 403 «not available in your subscription tier».
+    //
+    // Итог: из 13 пересечений каталога и API работают 4. У Free mode
+    // доступны только мелкие модели — весь флагман (Large, Medium,
+    // Small, Magistral) закрыт.
+    //
+    // Про «бесплатность»: у Mistral она не свойство модели, а режим
+    // аккаунта. Пока pay-as-you-go выключен, работающие модели идут по $0.
+    "mistral": {
+      "settings": {
+        "apiKey": "{file:~/.config/opencode/secrets/mistral-key}"
+      },
+      "models": {
+        // === Все модели Mistral платные (cost > 0) — отключены ===
+        "codestral-2508": { "disabled": true },
+        "ministral-14b-2512": { "disabled": true },
+        "ministral-8b-2512": { "disabled": true },
+        "ministral-3b-2512": { "disabled": true },
+
+        // === Дубли тех же моделей под другими именами ===
+        "codestral-latest": { "disabled": true },
+        "ministral-8b-latest": { "disabled": true },
+        "ministral-3b-latest": { "disabled": true },
+
+        // === Проверено: 429, x-ratelimit-limit-req-minute: 0 ===
+        // Закрыты для этого тира, хотя в /v1/models присутствуют
+        "mistral-medium-2604": { "disabled": true },
+        "mistral-medium-latest": { "disabled": true },
+        "mistral-small-2603": { "disabled": true },
+        "mistral-small-latest": { "disabled": true },
+        "magistral-medium-latest": { "disabled": true },
+        // Проверено: 403 «is a Labs model. To use Labs mode...» —
+        // требует включения Labs mode в консоли
+        "labs-leanstral-1-5-1": { "disabled": true },
+
+        // === В каталоге есть, у этого ключа недоступны ===
+        // Проверено: 403 «not available in your subscription tier»
+        "mistral-large-4": { "disabled": true },
+        "mistral-large-latest": { "disabled": true },
+        "mistral-large-2512": { "disabled": true },
+        "mistral-large-2411": { "disabled": true },
+        // Devstral
+        "devstral-2512": { "disabled": true },
+        "devstral-latest": { "disabled": true },
+        "devstral-medium-2507": { "disabled": true },
+        "devstral-medium-latest": { "disabled": true },
+        "devstral-small-2507": { "disabled": true },
+        "devstral-small-2505": { "disabled": true },
+        "labs-devstral-small-2512": { "disabled": true },
+        // Перепродаваемые GLM
+        "glm-5-2": { "disabled": true },
+        "zai-glm-5-2": { "disabled": true },
+        "zai-glm-5-3": { "disabled": true },
+        // Старые версии
+        "mistral-medium-2508": { "disabled": true },
+        "mistral-medium-2505": { "disabled": true },
+        "mistral-small-2506": { "disabled": true },
+        "mistral-nemo": { "disabled": true },
+        // Старые открытые модели и пикстраль
+        "open-mistral-7b": { "disabled": true },
+        "open-mistral-nemo": { "disabled": true },
+        "open-mixtral-8x22b": { "disabled": true },
+        "open-mixtral-8x7b": { "disabled": true },
+        "pixtral-12b": { "disabled": true },
+        "pixtral-large-latest": { "disabled": true },
+        // Эмбеддинги
+        "mistral-embed": { "disabled": true },
+        // Аудио: транскрипция, TTS, realtime
+        "voxtral-small-2507": { "disabled": true },
+        "voxtral-small-latest": { "disabled": true },
+        "voxtral-mini-latest": { "disabled": true },
+        "voxtral-mini-tts-latest": { "disabled": true }
+      }
+    },
+
+    "aitunnel": {
+      "name": "AITunnel",
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "https://api.aitunnel.ru/v1",
+        "apiKey": "{file:~/.config/opencode/secrets/aitunnel-key}"
+      },
+      "models": {
+        // === Reasoning ===
+        "claude-sonnet-4": {
+          "name": "Claude Sonnet 4 (AITunnel)"
+        },
+        "gpt-5.3-codex": {
+          "name": "GPT 5.3 Codex (AITunnel)"
+        },
+        "gpt-5.6-luna-pro": {
+          "name": "GPT 5.6 Luna Pro (AITunnel)"
+        },
+        "deepseek-v4-pro": {
+          "name": "DeepSeek V4 Pro (AITunnel)"
+        },
+        "grok-4.7": {
+          "name": "Grok 4.7 (AITunnel)"
+        },
+        "claude-opus-5.5": {
+          "name": "Claude Opus 5.5 (AITunnel)"
+        },
+
+        // === Быстрая и дешёвая ===
+        "gemini-3.8-flash": {
+          "name": "Gemini 3.8 Flash (AITunnel)"
+        },
+        "gemini-3.7-flash": {
+          "name": "Gemini 3.7 Flash (AITunnel)"
+        }
+      }
+    },
+
+    // === GOOGLE AI STUDIO ===
+    // Официальный ключ от aistudio.google.com, без сторонних плагинов и
+    // OAuth. Нативный провайдер google из каталога, package наследуется.
+    // ВНИМАНИЕ: у каталогного провайдера models только подписывает модели —
+    // новые не добавляет и лишние не прячет. Поэтому ненужное отключаем
+    // явно через disabled: иначе в /models остаётся весь каталог (31 шт.),
+    // включая эмбеддинги, генерацию картинок, lyria и computer-use.
+    //
+    // Доступность на бесплатном тарифе проверена живыми запросами, а не
+    // взята из каталога: у 7 из 14 моделей лимит 0 токенов либо они закрыты
+    // для новых аккаунтов. Google это заранее не сообщает.
+    "google": {
+      "settings": {
+        "apiKey": "{file:~/.config/opencode/secrets/google-key}"
+      },
+      "models": {
+        // === Бесплатные ===
+        "gemma-4-26b-a4b-it": { "name": "Gemma 4 26B A4B IT (Google)" },
+
+        // === Работают на free tier, но не бесплатные (cost > 0) ===
+        "gemini-3.8-flash": { "disabled": true },
+        "gemini-3.7-flash": { "disabled": true },
+        "gemini-3.6-flash": { "disabled": true },
+        "gemini-3.5-flash-lite": { "disabled": true },
+        "gemini-3-flash-preview": { "disabled": true },
+        "gemini-flash-latest": { "disabled": true },
+
+        // === Проверено: бесплатный лимит 0 токенов, только платно ===
+        "gemini-4-argon": { "disabled": true },
+        "gemini-3.5-flash": { "disabled": true },
+        "gemini-3.1-pro-preview": { "disabled": true },
+        // === Проверено: закрыты для новых аккаунтов ===
+        "gemini-2.5-pro": { "disabled": true },
+        "gemini-2.5-flash": { "disabled": true },
+        "gemini-2.5-flash-lite": { "disabled": true },
+        // === Проверено: Internal error на этом ключе ===
+        "gemma-4-31b-it": { "disabled": true },
+
+        // === Не для агентного кода ===
+        // Движущийся алиас, дублирующий gemini-3.5-flash-lite
+        "gemini-flash-lite-latest": { "disabled": true },
+        // Эмбеддинги
+        "gemini-embedding-2": { "disabled": true },
+        "gemini-embedding-001": { "disabled": true },
+        // Генерация изображений
+        "gemini-3-pro-image": { "disabled": true },
+        "gemini-3-pro-image-preview": { "disabled": true },
+        "gemini-3.1-flash-image": { "disabled": true },
+        "gemini-3.1-flash-image-preview": { "disabled": true },
+        "gemini-3.1-flash-lite-image": { "disabled": true },
+        "gemini-2.5-flash-image": { "disabled": true },
+        // Музыка (lyria)
+        "lyria-3-pro-preview": { "disabled": true },
+        "lyria-3-clip-preview": { "disabled": true },
+        // Специализированные: deep research, computer use, live
+        "deep-research-preview-04-2026": { "disabled": true },
+        "deep-research-max-preview-04-2026": { "disabled": true },
+        "gemini-2.5-computer-use-preview-10-2025": { "disabled": true },
+        "gemini-3.1-flash-live-preview": { "disabled": true },
+        // Дубли
+        "gemini-3.1-flash-lite": { "disabled": true },
+        "gemini-3.1-pro-preview-customtools": { "disabled": true }
+      }
+    },
+
+    // === OPENROUTER: ТОЛЬКО БЕСПЛАТНЫЕ ===
+    // Отдельный провайдер вместо встроенного `openrouter`: у того 461
+    // модель, и список быстро расползся бы. Здесь перечислены все
+    // бесплатные модели с поддержкой инструментов — 14 из 17.
+    "openrouter-free": {
+      "name": "OpenRouter (free)",
+      "package": "@opencode/ai/providers/openrouter",
+      "settings": {
+        "apiKey": "{file:~/.config/opencode/secrets/openrouter-key}"
+      },
+      "models": {
+        "nvidia/nemotron-3-ultra-550b-a55b:free": { "name": "Nemotron 3 Ultra 550B (free)" },
+        "nvidia/nemotron-3-super-120b-a12b:free": { "name": "Nemotron 3 Super 120B (free)" },
+        "nvidia/nemotron-3.5-lightning:free": { "name": "Nemotron 3.5 Lightning (free)" },
+        "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": { "name": "Nemotron 3 Nano Omni 30B (free)" },
+        "poolside/laguna-s-2.1:free": { "name": "Laguna S 2.1 (free)" },
+        "poolside/laguna-xs-2.1:free": { "name": "Laguna XS 2.1 (free)" },
+        "cohere/north-mini-code:free": { "name": "North Mini Code (free)" },
+        "google/gemma-4-31b-it:free": { "name": "Gemma 4 31B IT (free)" },
+        "google/gemma-4-26b-a4b-it:free": { "name": "Gemma 4 26B A4B IT (free)" },
+        "thinkingmachines/inkling:free": { "name": "Inkling (free)" },
+        "thinkingmachines/inkling-small:free": { "name": "Inkling Small (free)" },
+        "dots-studio/dots-3-note-preview:free": { "name": "Dots3-Note Preview (free)" },
+        "liquid/lfm-2.5-2.6b:free": { "name": "LFM2.5-2.6B (free)" },
+        "openrouter/free": { "name": "Free Models Router" }
+      }
+    },
+
+    // === POLLINATIONS: ТОЛЬКО БЕСПЛАТНЫЕ ===
+    // В models.dev провайдера нет, поэтому описываем целиком через
+    // openai-compatible. Список fail-closed: в /models попадёт только то,
+    // что перечислено ниже.
+    //
+    // В каталоге Pollinations 104 модели, из них 75 умеют чат с
+    // инструментами. По-настоящему бесплатных (без поля pricing) — всего
+    // ДВЕ, и обе от пользователей сообщества, а не от Pollinations:
+    //   community/morriszdweck/glm-5.3-flash-free
+    //   community/YoannDev90/muse-glimmer-30b:free
+    // Остальные 73 стоят Pollen (1 Pollen = $1) и списываются с баланса.
+    // Обе проверены живым запросом: HTTP 200, tool_calls с корректными
+    // аргументами, ответы по существу верны (17*23=391, столица Японии).
+    //
+    // ОСТОРОЖНО: у обеих в каталоге health=degraded и всего ~50 запросов
+    // статистики — это community-модели, их могут отключить в любой момент.
+    // Это единственные бесплатные варианты, всё остальное платное.
+    "pollinations": {
+      "name": "Pollinations (free only)",
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "https://gen.pollinations.ai/v1",
+        "apiKey": "{file:~/.config/opencode/secrets/pollinations-key}"
+      },
+      "models": {
+        "community/morriszdweck/glm-5.3-flash-free": {
+          "name": "GLM 5.3 Flash (Pollinations, free)"
+        },
+        "community/YoannDev90/muse-glimmer-30b:free": {
+          "name": "Muse Glimmer 30B (Pollinations, free)"
+        }
+      }
+    },
+
+    // === ORCAROUTER: ТОЛЬКО БЕСПЛАТНЫЕ ===
+    // Агрегатор с zero markup. Бесплатные модели имеют суффикс -free.
+    // orcarouter/free — авто-роутер, выбирает модель по сложности запроса.
+    // Проверено живыми запросами: tool_calls работают.
+    //
+    // ВНИМАНИЕ: API /v1/models отдаёт ВСЕ модели (200+), включая платные.
+    // Провайдер подтягивает каталог автоматически, поэтому платные модели
+    // отключаем явно через disabled: true.
+    "orcarouter": {
+      "name": "OrcaRouter (free)",
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "https://api.orcarouter.ai/v1",
+        "apiKey": "{file:~/.config/opencode/secrets/orcarouter-key}"
+      },
+      "models": {
+        "deepseek/deepseek-v4-flash-free": {
+          "name": "DeepSeek V4.1 Flash (OrcaRouter, free)"
+        },
+        "z-ai/glm-5.3-flash-free": {
+          "name": "GLM 5.3 Flash (OrcaRouter, free)"
+        },
+        "orcarouter/free": {
+          "name": "OrcaRouter Free Auto-Router"
+        },
+        "tencent/hy3-free": {
+          "name": "Tencent HY3 (OrcaRouter, free)"
+        },
+        "tencent/hy4-preview-free": {
+          "name": "Tencent HY4 Preview (OrcaRouter, free)"
+        },
+
+        // === Платные — отключены ===
+        "z-ai/glm-5.3": { "disabled": true },
+        "z-ai/glm-5.3-flash": { "disabled": true },
+        "z-ai/glm-5.2": { "disabled": true },
+        "deepseek/deepseek-v4-flash-vision-exp": { "disabled": true },
+        "deepseek/deepseek-v4-pro-0813": { "disabled": true },
+        "deepseek/deepseek-v4-flash-0731": { "disabled": true },
+        "qwen/qwen3.8-27b": { "disabled": true },
+        "qwen/qwen3.8-max": { "disabled": true },
+        "qwen/qwen3.6-flash": { "disabled": true },
+        "google/gemini-flash-latest": { "disabled": true },
+        "google/gemini-flash-lite-latest": { "disabled": true },
+        "google/gemini-3.6-flash": { "disabled": true },
+        "google/gemini-3.5-flash-lite": { "disabled": true },
+        "grok/grok-4.5": { "disabled": true },
+        "grok/grok-4.6": { "disabled": true },
+        "meta/muse-spark-1.2": { "disabled": true },
+        "anthropic/claude-opus-5": { "disabled": true },
+        "anthropic/claude-opus-4.8": { "disabled": true },
+        "anthropic/claude-sonnet-5": { "disabled": true },
+        "anthropic/claude-fable-5": { "disabled": true },
+        "kimi/kimi-k3": { "disabled": true },
+        "kimi/kimi-k2.7-code": { "disabled": true },
+        "openai/gpt-5.6-luna": { "disabled": true },
+        "openai/gpt-5.6-terra": { "disabled": true },
+        "openai/gpt-5.6-sol": { "disabled": true },
+        "minimax/minimax-m3": { "disabled": true },
+        "orcarouter/fusion-mini": { "disabled": true }
+      }
+    },
+
+    // === CLOUDFLARE WORKERS AI ===
+    // Бесплатно 10 000 Neurons/день (обнуляется в 00:00 UTC).
+    // REST API OpenAI-совместимый: /ai/v1/chat/completions.
+    // Проверено: tool_calls работают на GLM 4.7 Flash, DeepSeek R1,
+    // Kimi K2.7, Qwen 2.5 Coder, Nemotron 3, Mistral Small, Gemma 4.
+    // Ограничение Workers Free: GLM 5.3, GLM 5.2, Kimi K2.6/K2.7
+    // недоступны (требуют Workers Paid). Доступные модели ниже.
+    "cloudflare": {
+      "name": "Cloudflare Workers AI",
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "https://api.cloudflare.com/client/v4/accounts/823644e90b5684635c3ce8549ed00d0f/ai/v1",
+        "apiKey": "{file:~/.config/opencode/secrets/cloudflare-key}"
+      },
+      "models": {
+        "@cf/zai-org/glm-4.7-flash": {
+          "name": "GLM 4.7 Flash (Cloudflare, free)"
+        },
+        "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b": {
+          "name": "DeepSeek R1 Distill Qwen 32B (Cloudflare, free)"
+        },
+        "@cf/qwen/qwen2.5-coder-32b-instruct": {
+          "name": "Qwen 2.5 Coder 32B (Cloudflare, free)"
+        },
+        "@cf/qwen/qwq-32b": {
+          "name": "QwQ 32B (Cloudflare, free)"
+        },
+        "@cf/nvidia/nemotron-3-120b-a12b": {
+          "name": "Nemotron 3 Super 120B (Cloudflare, free)"
+        },
+        "@cf/mistralai/mistral-small-3.1-24b-instruct": {
+          "name": "Mistral Small 3.1 24B (Cloudflare, free)"
+        },
+        "@cf/google/gemma-4-26b-a4b-it": {
+          "name": "Gemma 4 26B (Cloudflare, free)"
+        },
+        "@cf/openai/gpt-oss-120b": {
+          "name": "GPT-OSS 120B (Cloudflare, free)"
+        }
+      }
+    },
+
+    // UnoRouter удалён: API отдаёт ответ с контрольными символами
+    // (ломает JSON-парсер OpenCode), плюс rate limit 1 req/min на
+    // модель делает его непригодным для агентного использования.
+    // Ключ оставлен в secrets на случай ручных запросов.
+  },
+
+  // === ПОЛИТИКИ ПРОВАЙДЕРОВ ===
+  // Порядок в массиве значим: последнее совпавшее правило выигрывает.
+  // Глобальный конфиг сильнее проектного, поэтому проект не сможет
+  // вернуть встроенный openrouter обратно.
+  "experimental": {
+    "policies": [
+      { "action": "provider.use", "resource": "openrouter", "effect": "deny" }
+    ]
+  },
+
+  // === МОДЕЛЬ ПО УМОЛЧАНИЮ ===
+  // Big Pickle — бесплатная модель (OpenCode Zen, $0 за токены).
+  // Была space-bunny-free, но 2026-11-10 она отдаёт "Model unavailable"
+  // и запуск по умолчанию падал. Big Pickle проверен живым запросом.
+  // Рабочие бесплатные на эту дату: big-pickle, mimo-v2.6-flash-free,
+  // nemotron-3.5-lightning-free.
+  // Reasoning-вариант (low…max) выбирается в сессии: /models
+  // или opencode run --model opencode/big-pickle#high
+  "model": "opencode/big-pickle",
+
+  // === МАЛЕНЬКАЯ МОДЕЛЬ ===
+  // Для служебных задач: заголовки сессий, summary, компрессия.
+  // Big Pickle — бесплатно, отдельный платный провайдер не нужен.
+  "small_model": "opencode/big-pickle",
+  "plugin": []
+}

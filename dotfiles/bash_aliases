@@ -1,0 +1,36 @@
+# Навигация
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# Очистка экрана
+alias c='clear'
+alias cls='clear'
+
+# Git (исправлено)
+alias ga='git add'
+alias gc='git commit -m'
+alias gch='git checkout'
+alias gl='git log --oneline --graph --all'
+alias gs='git status'
+alias gpo='git pull origin'
+alias gp='git push'
+alias gpl='git pull'
+alias gpr='git pull --rebase'
+
+
+
+# Список файлов (исправлено)
+alias l='ls -CF'
+alias la='ls -A'
+alias ll='ls -la'
+alias ls='ls --color=auto'
+
+# Система (исправлено)
+alias update='sudo apt update && sudo apt upgrade -y'
+
+# Уведомления
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# Приложения
+alias deepseek='snap run deepseek-desktop'
+alias vpn='sudo FlClashX'

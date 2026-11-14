@@ -1,0 +1,23 @@
+# Firefox add-ons copied from the current profile.
+# Values are add-on IDs used with the addons.mozilla.org API.
+# One ID per line, "#" starts a comment.
+addon@darkreader.org
+simple-translate@sienori
+sponsorBlocker@ajay.app
+uBlock0@raymondhill.net
+extension@one-tab.com
+idcac-pub@guus.ninja
+jid1-BoFifL9Vbdl2zQ@jetpack
+jid1-MnnxcxisBPnSXQ@jetpack
+zero-blur@zero-blur
+ATBC@EasonWong
+@testpilot-containers
+{079d1596-6762-4154-905d-7731772f927d}
+{0d7cafdd-501c-49ca-8ebb-e3341caaa55e}
+{446900e4-71c2-419f-a6a7-df9c091e268b}
+{531906d3-e22f-4a6c-a102-8057b88a1a63}
+{74da71cc-4d66-48f5-95d1-1f017f18ffab}
+{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}
+{c3c10168-4186-445c-9c5b-63f12b8e2c87}
+{d7742d87-e61d-4b78-b8a1-b469842139fa}
+{eac6e624-97fa-4f28-9d24-c06c9b8aa713}

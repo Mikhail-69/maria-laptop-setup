@@ -1,0 +1,74 @@
+[/]
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom5/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom6/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom7/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom8/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom9/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom10/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom11/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom12/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom13/']
+
+# NumPad block (works on keyboards that have one)
+[custom0]
+binding='<Control>KP_End'
+command='__HOME__/.local/bin/open-youtube.sh'
+name='YouTube Subscriptions (numpad 1)'
+
+[custom1]
+binding='<Control>KP_Down'
+command='__HOME__/.local/bin/open-github.sh'
+name='Open GitHub (numpad 2)'
+
+[custom2]
+binding='<Control>KP_Insert'
+command='__HOME__/.local/bin/open-hotkeys.sh'
+name='Open Hotkeys (numpad 0)'
+
+[custom3]
+binding='<Control>KP_Next'
+command='__HOME__/.local/bin/open-leetcode.sh'
+name='Open LeetCode (numpad 3)'
+
+[custom4]
+binding='<Control>KP_Left'
+command='__HOME__/.local/bin/open-pdf.sh'
+name='Open PDF Book (numpad 4)'
+
+[custom5]
+binding='<Control>KP_Begin'
+command='__HOME__/.local/bin/open-sql.sh'
+name='Open SQL (numpad 5)'
+
+[custom6]
+binding='<Control>KP_Home'
+command='__HOME__/.local/bin/langfix.sh'
+name='Fix keyboard layout (numpad 7)'
+
+# Ctrl+Alt row (works on any laptop keyboard)
+[custom7]
+binding='<Control><Alt>1'
+command='__HOME__/.local/bin/open-github.sh'
+name='Open GitHub (Ctrl+Alt+1)'
+
+[custom8]
+binding='<Control><Alt>2'
+command='__HOME__/.local/bin/open-youtube.sh'
+name='YouTube Subscriptions (Ctrl+Alt+2)'
+
+[custom9]
+binding='<Control><Alt>3'
+command='__HOME__/.local/bin/open-leetcode.sh'
+name='Open LeetCode (Ctrl+Alt+3)'
+
+[custom10]
+binding='<Control><Alt>4'
+command='__HOME__/.local/bin/open-hotkeys.sh'
+name='Open Hotkeys (Ctrl+Alt+4)'
+
+[custom11]
+binding='<Control><Alt>5'
+command='__HOME__/.local/bin/open-pdf.sh'
+name='Open PDF Book (Ctrl+Alt+5)'
+
+[custom12]
+binding='<Control><Alt>6'
+command='__HOME__/.local/bin/open-sql.sh'
+name='Open SQL (Ctrl+Alt+6)'
+
+[custom13]
+binding='<Control><Alt>7'
+command='__HOME__/.local/bin/langfix.sh'
+name='Fix keyboard layout (Ctrl+Alt+7)'

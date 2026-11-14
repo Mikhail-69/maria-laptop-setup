@@ -1,0 +1,25 @@
+{
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.colorTheme": "Dark+",
+    "claudeCode.preferredLocation": "panel",
+    "terminal.integrated.initialHint": false,
+    "git.autofetch": true,
+    "chat.viewSessions.orientation": "stacked",
+    "explorer.confirmDragAndDrop": false,
+    "githubPullRequests.pullBranch": "never",
+    "yaml.disableSchemaDetection": [
+        "**/.github/workflows/*.yml",
+        "**/.github/workflows/*.yaml",
+        "**/.gitea/workflows/*.yml",
+        "**/.gitea/workflows/*.yaml",
+        "**/.forgejo/workflows/*.yml",
+        "**/.forgejo/workflows/*.yaml"
+    ],
+    "docker.extension.enableComposeLanguageServer": false,
+    "workbench.editor.empty.hint": "hidden",
+    "terminal.integrated.fontLigatures.enabled": true,
+    "terminal.integrated.fontFamily": "JetBrains Mono, monospace",
+    "editor.fontFamily": "JetBrains Mono, monospace",
+    "files.autoSave": "afterDelay",
+    "telemetry.telemetryLevel": "off"
+}

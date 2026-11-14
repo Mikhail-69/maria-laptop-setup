@@ -1,0 +1,17 @@
+# Local state
+*.log
+/tmp/
+
+# Downloads and generated artifacts
+downloads/
+iso/
+*.iso
+*.deb
+*.AppImage
+
+# Editor / OS noise
+.DS_Store
+.idea/
+.vscode/
+__pycache__/
+*.pyc

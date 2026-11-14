@@ -1,0 +1,211 @@
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+sandbox_mode = "workspace-write"
+model = "gpt-6.1-sol"
+model_reasoning_effort = "low"
+web_search = "live"
+
+[tui]
+screen_reader_detection_done = true
+theme = "dracula"
+
+[tui.model_availability_nux]
+"gpt-6.1-sol" = 4
+
+[hooks.state]
+
+[hooks.state."/home/mikhail/.codex/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:f3e1b7a5b52f64e28712085b17ba5dd7a6ae2e2a8739289ee05242f25f33c977"
+enabled = true
+
+[hooks.state."/home/mikhail/.codex/hooks.json:permission_request:0:0"]
+trusted_hash = "sha256:f824a873c52be01f3e4973f88bfc2945b93f9fa5da314b6aa1fb1772fbdf17dc"
+
+[hooks.state."/home/mikhail/.codex/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:35f46c724f0f5c3ca85f16f4816f4b0fbf3d66eb0b5778c7e48cbf9853718016"
+enabled = false
+
+[hooks.state."/home/mikhail/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:4f0c31a76d4655d35b7eebf7c260bbe2e0995f81bd2945488a143eae424e715c"
+
+[hooks.state."/home/mikhail/.codex/hooks.json:session_end:0:0"]
+trusted_hash = "sha256:88ae9be0eb5331695b22f5e95f9359abeefa39dd7c9b97ca541dfd5b87da35fe"
+
+[hooks.state."/home/mikhail/.codex/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:5ecb4fe544312e9c3704a4345997ee6d7e8bc4f2a0756fa4702e1596e6710e55"
+
+[hooks.state."/home/mikhail/.codex/hooks.json:subagent_start:0:0"]
+trusted_hash = "sha256:318a60c5218f416d0c475a5952291843f92e21850de435da5cca3b64a0a1d067"
+
+[hooks.state."/home/mikhail/.codex/hooks.json:subagent_stop:0:0"]
+trusted_hash = "sha256:3ff523c7364318c4e60948570003ccb8290eec72c61570c5f45541215489e70e"
+
+[hooks.state."/home/mikhail/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:2f7a977a44a155bc9442ce8b9e8fe9435335c80b534c855354db3a79f74b3374"
+
+[hooks.state."/home/mikhail/.codex/hooks.json:interrupt:0:0"]
+trusted_hash = "sha256:98c581689082563939e544f1adc08ce68802a2a75b7eda4b54c6d491d4465811"
+
+[hooks.state."security-guidance@claude-plugins-official:hooks/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:e1f574c07fd492df4de2ceb615c3b0a2a3eca27329bf0929ff9095650c7174bf"
+trusted_content_hash = "sha256:a53e4935e956c2e5037359b33de0e553caf4997677eca1bc44c500e81281f3b6"
+
+[hooks.state."security-guidance@claude-plugins-official:hooks/hooks.json:post_tool_use:1:0"]
+trusted_hash = "sha256:ff051adf363232a355758bbc96941b87ab8b38bd47e6c5940b1232827a68b6d6"
+trusted_content_hash = "sha256:a53e4935e956c2e5037359b33de0e553caf4997677eca1bc44c500e81281f3b6"
+
+[hooks.state."security-guidance@claude-plugins-official:hooks/hooks.json:post_tool_use:1:1"]
+trusted_hash = "sha256:ff051adf363232a355758bbc96941b87ab8b38bd47e6c5940b1232827a68b6d6"
+trusted_content_hash = "sha256:a53e4935e956c2e5037359b33de0e553caf4997677eca1bc44c500e81281f3b6"
+
+[hooks.state."security-guidance@claude-plugins-official:hooks/hooks.json:post_tool_use:1:2"]
+trusted_hash = "sha256:ff051adf363232a355758bbc96941b87ab8b38bd47e6c5940b1232827a68b6d6"
+trusted_content_hash = "sha256:a53e4935e956c2e5037359b33de0e553caf4997677eca1bc44c500e81281f3b6"
+
+[hooks.state."security-guidance@claude-plugins-official:hooks/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:3def3be0b299c29f829ea4b057509c24f3c6f8eede7b8c719bbd4167866d6cf6"
+trusted_content_hash = "sha256:a53e4935e956c2e5037359b33de0e553caf4997677eca1bc44c500e81281f3b6"
+
+[hooks.state."security-guidance@claude-plugins-official:hooks/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:c22701bf949e9ffd219867faec1158e0124874e94f3668dab6209fa3acc92dd6"
+trusted_content_hash = "sha256:a53e4935e956c2e5037359b33de0e553caf4997677eca1bc44c500e81281f3b6"
+
+[hooks.state."security-guidance@claude-plugins-official:hooks/hooks.json:stop:0:0"]
+trusted_hash = "sha256:5d8880157e747997146b5eb0443a43909e23fb0203e64ae4895eff5a1b0282fa"
+trusted_content_hash = "sha256:a53e4935e956c2e5037359b33de0e553caf4997677eca1bc44c500e81281f3b6"
+
+[hooks.state."/home/mikhail/.codex/hooks.json:pre_tool_use:1:0"]
+trusted_hash = "sha256:da1f8c6e8d73206337d61cee00dfcc19d0940cc6452cd830f758610ae0bb8022"
+
+[hooks.state."/home/mikhail/.codex/hooks.json:post_tool_use:1:0"]
+trusted_hash = "sha256:e34023bb3a9176c9fce0bf3015b3d48d143327813c233bb627942fd85dcb524c"
+
+[hooks.state."security-guidance@claude-plugins-official:hooks/hooks.json:post_tool_use:2:0"]
+trusted_hash = "sha256:3c4ccf11441e3b148ff79f7c48dac5b69770424df40c34b0af0b30b2ca876e13"
+trusted_content_hash = "sha256:a53e4935e956c2e5037359b33de0e553caf4997677eca1bc44c500e81281f3b6"
+
+[hooks.state."security-guidance@claude-plugins-official:hooks/hooks.json:post_tool_use:2:1"]
+trusted_hash = "sha256:3c4ccf11441e3b148ff79f7c48dac5b69770424df40c34b0af0b30b2ca876e13"
+trusted_content_hash = "sha256:a53e4935e956c2e5037359b33de0e553caf4997677eca1bc44c500e81281f3b6"
+
+[projects."/home/mikhail/Рабочая_среда/cloud-converter"]
+trust_level = "trusted"
+
+[projects."/home/mikhail"]
+trust_level = "trusted"
+
+[projects."/home/mikhail/Рабочая_среда/ЯПрепод/Мат_и_ИИ"]
+trust_level = "trusted"
+
+[marketplaces.openai-primary-runtime]
+source_type = "local"
+source = "/home/mikhail/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[marketplaces.openai-bundled]
+source_type = "local"
+source = "/home/mikhail/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.claude-plugins-official]
+source_type = "git"
+source = "https://github.com/anthropics/claude-plugins-official.git"
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."unified-computer-use@openai-bundled"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[plugins."code-review@claude-plugins-official"]
+enabled = true
+
+[plugins."code-simplifier@claude-plugins-official"]
+enabled = true
+
+[plugins."commit-commands@claude-plugins-official"]
+enabled = true
+
+[plugins."frontend-design@claude-plugins-official"]
+enabled = true
+
+[plugins."security-guidance@claude-plugins-official"]
+enabled = true
+
+[mcp_servers.node_repl]
+args = []
+command = "/usr/lib/chatgpt/resources/cua_node/bin/node_repl"
+env_vars = [
+    "BROWSER_USE_ACCESS_EXECUTOR_ID",
+    "BROWSER_USE_ACCESS_PIPE_PATH",
+    "BROWSER_USE_ACCESS_VERIFYING_IDENTITY",
+]
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/usr/lib/chatgpt/resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/usr/lib/chatgpt/resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/home/mikhail/.codex:/usr/lib/chatgpt/resources/cua_node/lib/node_modules"
+CODEX_HOME = "/home/mikhail/.codex"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab,mcpapps"
+BROWSER_USE_TINYSKY_ENABLED = "1"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = ""
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = ""
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.1103.32239"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/home/mikhail/.codex/plugins/cache/openai-bundled/browser/26.1103.32239/scripts/browser-service.mjs"}'
+CODEX_CLI_PATH = "/usr/lib/chatgpt/resources/codex"
+
+[mcp_servers.context7]
+command = "npx"
+args = [
+    "-y",
+    "@upstash/context7-mcp",
+]
+
+[mcp_servers.github]
+command = "/home/mikhail/.claude/hooks/github-mcp.sh"
+
+[mcp_servers.playwright]
+command = "npx"
+args = [
+    "-y",
+    "@playwright/mcp@latest",
+]
+
+[desktop]
+external-agent-import-sync-item-types = "all"
+external-agent-import-sync-enabled = true
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = true
+
+[auto_review]
+extra_policy = """
+Routine reads, local code edits, project dependency installation, builds, tests,
+linters and diagnostics within the user's requested task need no separate human
+confirmation. Respect the sandbox and the default security policy.
+Require explicit user authorization for irreversible user-data loss, bulk deletion,
+history rewriting, publication of private data, paid operations, access-control
+changes, and significant production or running-service changes. A direct request
+for the specific action is authorization; do not require duplicate confirmation.
+Git commits and pushes require an explicit user request. Preserve credentials and
+unrelated user work. If a high-impact action lacks authorization, deny it so the
+main agent can prepare the concrete action and ask the user.
+"""

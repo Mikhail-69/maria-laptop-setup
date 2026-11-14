@@ -1,0 +1,26 @@
+name: dry-run
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  stages:
+    runs-on: ubuntu-latest
+    env:
+      DRY_RUN: "1"
+      FORCE: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install jq
+        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends jq
+
+      - name: run stages 01-10 in dry-run mode
+        run: |
+          for stage in 01 02 03 04 05 06 07 08 09 10; do
+            script="$(find . -maxdepth 1 -name "${stage}-*.sh" -print -quit)"
+            echo "::group::${script}"
+            bash "$script"
+            echo "::endgroup::"
+          done
